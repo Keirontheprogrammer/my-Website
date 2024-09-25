@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>My page!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="Men.html">Men</a></li>
+                <li><a href="Women.html">Women</a></li>
+                <li><a href="Kids.html">Kids</a></li>
+                <li><a href="Help.html">Help</a></li>
+                <li><a href="Sign in.html">Sign in</a></li>
+                <li class="logo"><a href="index.html">ShoeWizard</a></li>
+            </ul>
+        </nav>
+      
+        <h1>SIGN IN</h1>
+    </header>
+    <form id="login-form" action="submit">
+        <fieldset>
+            <legend>
+                User Details
+            </legend>
+            <div>
+                <label for="username">Username</label>
+                <input id="username" type="text" name="username" placeholder="Eg. Tama or whatever" required/>
+            </div>
+            <div>
+                <label for="password">Password</label>
+                <input id="password" type="password" name="password" required />
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
+                Login Type
+            </legend>
+            <span>
+                <input id="register" type="radio" name="login_type" value="register" checked="checked">
+                <label for="register">Register</label>
+            </span>
+            <span>
+                <input id="login" type="radio" name="login_type" value="login">
+                <label for="login">Login</label>
+            </span>
+        </fieldset>
+        <input type="submit" value="Submit" />
+    
+        <output name="result"></output>
+    </form>
+    
+</body>
+
+<script>
+    window.addEventListener("DOMContentLoaded", setupForm);
+
+function setupForm(){
+	const form = document.getElementById("login-form");
+	form.addEventListener("submit", handleSubmit);
+}//setupForm
+
+function handleSubmit(event){
+	event.preventDefault();
+
+	const {
+		username,
+		password,
+		login_type,
+		result
+	} = event.target;
+
+	const processUser = login_type.value == "register" ? registerUser : loginUser;
+	const response    = processUser(username.value, password.value);
+	result.innerHTML  = response;
+}//handleSubmit
+
+function registerUser(username, password){
+	window.localStorage.setItem("exampleLogin__username", username);
+	window.localStorage.setItem("exampleLogin__password", password);
+
+	return `New user ${username} now registered!`;
+}//registerUser
+
+function loginUser(username, password){
+	const registeredUser     = window.localStorage.getItem("exampleLogin__username");
+	const registeredPassword = window.localStorage.getItem("exampleLogin__password");
+
+	const validUser     = username == registeredUser;
+	const validPassword = password == registeredPassword;
+
+	if(validUser && validPassword){
+		return `User ${username} successfully logged-in!`;
+	}
+        else if(!validUser)     return `Username ${username} has not been registered. `;
+	else if(!validPassword) return `Incorrect password for username ${username}`;
+}//loginUser
+</script>
+
+
+</html>
